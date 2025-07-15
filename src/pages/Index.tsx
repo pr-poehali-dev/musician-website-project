@@ -1,10 +1,21 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import AdminPanel from "@/components/AdminPanel";
+
+interface Track {
+  id: number;
+  title: string;
+  duration: string;
+  price: string;
+  genre: string;
+  platforms: string[];
+}
 
 const Index = () => {
-  const tracks = [
+  const [tracks, setTracks] = useState<Track[]>([
     {
       id: 1,
       title: "Midnight Echoes",
@@ -29,7 +40,15 @@ const Index = () => {
       genre: "Ambient",
       platforms: ["Bandcamp", "Apple Music", "Tidal"]
     }
-  ];
+  ]);
+
+  const handleAddTrack = (newTrack: Track) => {
+    setTracks(prev => [...prev, newTrack]);
+  };
+
+  const handleDeleteTrack = (id: number) => {
+    setTracks(prev => prev.filter(track => track.id !== id));
+  };
 
   const upcomingEvents = [
     {
@@ -276,6 +295,13 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Админ-панель */}
+      <AdminPanel 
+        tracks={tracks}
+        onAddTrack={handleAddTrack}
+        onDeleteTrack={handleDeleteTrack}
+      />
     </div>
   );
 };
