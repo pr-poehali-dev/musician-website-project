@@ -19,6 +19,8 @@ interface Track {
   platforms: string[];
   file?: File;
   description?: string;
+  coverImage?: File;
+  coverImageUrl?: string;
 }
 
 interface AdminPanelProps {
@@ -35,7 +37,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ tracks, onAddTrack, onDeleteTra
     genre: "",
     description: "",
     platforms: [] as string[],
-    file: null as File | null
+    file: null as File | null,
+    coverImage: null as File | null
   });
 
   const availablePlatforms = ["Spotify", "Apple Music", "Bandcamp", "SoundCloud", "YouTube Music", "Tidal"];
@@ -55,6 +58,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ tracks, onAddTrack, onDeleteTra
         const duration = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         setFormData(prev => ({ ...prev, duration }));
       });
+    }
+  };
+
+  const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      setFormData(prev => ({ ...prev, coverImage: file }));
     }
   };
 
@@ -83,7 +93,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ tracks, onAddTrack, onDeleteTra
       genre: formData.genre || "Неизвестно",
       platforms: formData.platforms,
       file: formData.file,
-      description: formData.description
+      description: formData.description,
+      coverImage: formData.coverImage,
+      coverImageUrl: formData.coverImage ? URL.createObjectURL(formData.coverImage) : undefined
     };
 
     onAddTrack(newTrack);
@@ -96,6 +108,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ tracks, onAddTrack, onDeleteTra
       description: "",
       platforms: [],
       file: null,
+      coverImage: null,
       duration: ""
     });
     
@@ -150,6 +163,45 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ tracks, onAddTrack, onDeleteTra
                       <Icon name="Upload" size={48} className="mx-auto mb-2" />
                       <div className="font-medium">Нажмите для выбора файла</div>
                       <div className="text-sm">MP3, WAV, FLAC до 100MB</div>
+                    </div>
+                  )}
+                </Label>
+              </div>
+            </div>
+
+            {/* Обложка трека */}
+            <div className="space-y-2">
+              <Label htmlFor="coverImage" className="text-base font-semibold">
+                Обложка трека
+              </Label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <input
+                  id="coverImage"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange}
+                  className="hidden"
+                />
+                <Label htmlFor="coverImage" className="cursor-pointer">
+                  {formData.coverImage ? (
+                    <div className="flex items-center justify-center gap-4">
+                      <img 
+                        src={URL.createObjectURL(formData.coverImage)}
+                        alt="Превью обложки"
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div className="text-green-600">
+                        <div className="font-medium">{formData.coverImage.name}</div>
+                        <div className="text-sm text-gray-500">
+                          {(formData.coverImage.size / 1024 / 1024).toFixed(2)} MB
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-gray-500">
+                      <Icon name="ImagePlus" size={32} className="mx-auto mb-2" />
+                      <div className="font-medium">Добавить обложку</div>
+                      <div className="text-sm">JPG, PNG, WEBP до 10MB</div>
                     </div>
                   )}
                 </Label>

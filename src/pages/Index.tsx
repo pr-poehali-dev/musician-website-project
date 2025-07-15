@@ -12,6 +12,7 @@ interface Track {
   price: string;
   genre: string;
   platforms: string[];
+  coverImageUrl?: string;
 }
 
 const Index = () => {
@@ -22,7 +23,8 @@ const Index = () => {
       duration: "3:45",
       price: "$2.99",
       genre: "Electronic",
-      platforms: ["Spotify", "Apple Music", "Bandcamp"]
+      platforms: ["Spotify", "Apple Music", "Bandcamp"],
+      coverImageUrl: "/img/a281db87-961b-4cc9-8ab1-979599444473.jpg"
     },
     {
       id: 2,
@@ -30,7 +32,8 @@ const Index = () => {
       duration: "4:12",
       price: "$2.99",
       genre: "Hip-Hop",
-      platforms: ["Spotify", "SoundCloud", "YouTube Music"]
+      platforms: ["Spotify", "SoundCloud", "YouTube Music"],
+      coverImageUrl: "/img/b4a108ed-d185-47bf-a38f-c852e7fd401e.jpg"
     },
     {
       id: 3,
@@ -38,7 +41,8 @@ const Index = () => {
       duration: "5:30",
       price: "$3.99",
       genre: "Ambient",
-      platforms: ["Bandcamp", "Apple Music", "Tidal"]
+      platforms: ["Bandcamp", "Apple Music", "Tidal"],
+      coverImageUrl: "/img/6d464b63-909a-4604-8609-f4a8154f1d42.jpg"
     }
   ]);
 
@@ -125,6 +129,13 @@ const Index = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-6">
+                      {track.coverImageUrl && (
+                        <img 
+                          src={track.coverImageUrl} 
+                          alt={`Обложка ${track.title}`}
+                          className="w-16 h-16 object-cover rounded-lg shadow-md"
+                        />
+                      )}
                       <Button variant="outline" size="sm" className="rounded-full w-12 h-12">
                         <Icon name="Play" size={20} />
                       </Button>
